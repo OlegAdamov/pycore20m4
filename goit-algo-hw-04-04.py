@@ -79,7 +79,7 @@ def main():
         user_input = input("Enter your command (enter 'exit' or 'close' to stop): ").strip().lower()
         command, *args = parse_input(user_input)
 
-        if command == "exit" or command == "close":
+        if command in ["close", "exit"]:
             print('Goodbye!')
             save_contacts(contact_file, contacts)
             break
