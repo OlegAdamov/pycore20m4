@@ -8,32 +8,38 @@ Style.RESET_ALL
 FOLDER_STYLE = Fore.WHITE + Back.BLACK
 ARCHIVES_STYLE = Fore.YELLOW + Back.BLACK
 DOCUMENTS_STYLE = Fore.BLUE + Back.BLACK
-DOCUMENTS_TXT_STYLE = Fore.MAGENTA + Back.BLACK
-DOCUMENTS_PDF_STYLE = Fore.CYAN + Back.BLACK
+VIDEOS_STYLE = Fore.MAGENTA + Back.BLACK
+MUSIC_STYLE = Fore.CYAN + Back.BLACK
 IMAGES_STYLE = Fore.GREEN + Back.BLACK
-ERROR_STYLE = Fore.RED + Back.BLACK
+CODE_STYLE = Fore.BLACK + Back.YELLOW
+SOMETHING_STYLE = Fore.RED + Back.BLACK
 
 
 def cororite_name(clean_name):
 
-    archives = ('zip', 'gztar', 'tar')
-    documents_doc = ('doc', 'docx', 'xlsx', 'pptx')
-    documents_txt = ('txt')
-    documents_pdf = ('pdf')
-    images = ('jpeg', 'png', 'jpg')
+    archives = ('zip', 'gztar', 'tar' 'gz', 'rar')
+    documents_doc = ('doc', 'docx', 'xlsx', 'pptx', 'txt', 'pdf')
+    videos = ("avi", "mp4", "mov", "mkv")
+    music = ("mp3", "ogg", "wav", "flac") 
+    images = ('jpeg', 'png', 'jpg' 'gif')
+    code_file = ('py', 'pyc', 'md', 'cfg', 'ps1', 'bat', 'exe', 'pth', "js", "html", "css", 'scss', 'bmp')
 
-    if clean_name.endswith(archives):
-        print(ARCHIVES_STYLE + clean_name)
-    elif clean_name.endswith(documents_doc):
-        print(DOCUMENTS_STYLE + clean_name)
-    elif clean_name.endswith(documents_txt):
-        print(DOCUMENTS_TXT_STYLE + clean_name)
-    elif clean_name.endswith(documents_pdf):
-        print(DOCUMENTS_PDF_STYLE + clean_name)
-    elif clean_name.endswith(images):
-        print(IMAGES_STYLE + clean_name)
+    if clean_name.is_dir():
+        return FOLDER_STYLE
+    elif clean_name.as_posix().endswith(archives):
+        return ARCHIVES_STYLE
+    elif clean_name.as_posix().endswith(documents_doc):
+        return DOCUMENTS_STYLE
+    elif clean_name.as_posix().endswith(videos):
+        return VIDEOS_STYLE
+    elif clean_name.as_posix().endswith(music):
+        return MUSIC_STYLE
+    elif clean_name.as_posix().endswith(images):
+        return IMAGES_STYLE
+    elif clean_name.as_posix().endswith(code_file):
+        return CODE_STYLE
     else:
-        print(FOLDER_STYLE + clean_name)
+        return SOMETHING_STYLE
 
 
 def parse_folder_recursive(path):
@@ -41,29 +47,33 @@ def parse_folder_recursive(path):
     path_obj = path
     if not path_obj.exists() or not path_obj.is_dir():  # перевірки шляхів та папки
         return
-    
-    print(path_obj)
-    def dfs_walk(current_dir, index_slash=0, old_margin=''):
+
+    index_slash_for_start_folder = str(path_obj).rfind('\\')
+    name_folder = str(path_obj)[index_slash_for_start_folder+1:]
+    print(name_folder)
+    def dfs_walk(current_dir, old_margin=''):
         
         for item in current_dir.iterdir():  # iterdir() зчитує вміст поточної папки
-            # print(f"{item}", type(item))
-            item_string = str(item)
+            # print(f"{item = }")
+            item_string = str(item).strip()
             # print(f"{item_string = }")
 
-            index_slash = item_string.find('\\', index_slash+1)     # знаходимо індекси слешів для обрізки шляху
-            # print(f"{index_slash = }", type(index_slash))
-
             # Обрізаємо шлях до назви файлу чи папки
-            margin = len(current_dir.as_posix()) - len(old_margin) - 1
+            path_len_to_folder = len(item_string[:index_slash_for_start_folder+1])
+
+            margin = len(current_dir.as_posix()) - len(old_margin) - 1 - path_len_to_folder
+            # print(f"First_margin = {margin}")
             margin_item = ' '
             margin = old_margin + ' ' + margin * margin_item
+            # print(f"New_margin = {len(margin)}")
             
             for_repl = current_dir.as_posix()
             clean_name = item.as_posix().replace(f"{for_repl}/", margin)
-            cororite_name(clean_name)
+            
+            print(f"{cororite_name(item)}{clean_name}")
             
             if item.is_dir():   # Якщо це папка, пірнаємо на глибину
-                dfs_walk(item, index_slash, margin)
+                dfs_walk(item, margin)
 
     dfs_walk(path_obj)
 
