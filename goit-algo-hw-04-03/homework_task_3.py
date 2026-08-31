@@ -5,7 +5,35 @@ import sys
 init(autoreset=True)
 Style.RESET_ALL
 
+FOLDER_STYLE = Fore.WHITE + Back.BLACK
+ARCHIVES_STYLE = Fore.YELLOW + Back.BLACK
+DOCUMENTS_STYLE = Fore.BLUE + Back.BLACK
+DOCUMENTS_TXT_STYLE = Fore.MAGENTA + Back.BLACK
+DOCUMENTS_PDF_STYLE = Fore.CYAN + Back.BLACK
+IMAGES_STYLE = Fore.GREEN + Back.BLACK
+ERROR_STYLE = Fore.RED + Back.BLACK
 
+
+def cororite_name(clean_name):
+
+    archives = ('zip', 'gztar', 'tar')
+    documents_doc = ('doc', 'docx', 'xlsx', 'pptx')
+    documents_txt = ('txt')
+    documents_pdf = ('pdf')
+    images = ('jpeg', 'png', 'jpg')
+
+    if clean_name.endswith(archives):
+        print(ARCHIVES_STYLE + clean_name)
+    elif clean_name.endswith(documents_doc):
+        print(DOCUMENTS_STYLE + clean_name)
+    elif clean_name.endswith(documents_txt):
+        print(DOCUMENTS_TXT_STYLE + clean_name)
+    elif clean_name.endswith(documents_pdf):
+        print(DOCUMENTS_PDF_STYLE + clean_name)
+    elif clean_name.endswith(images):
+        print(IMAGES_STYLE + clean_name)
+    else:
+        print(FOLDER_STYLE + clean_name)
 
 
 def parse_folder_recursive(path):
@@ -28,19 +56,16 @@ def parse_folder_recursive(path):
             # Обрізаємо шлях до назви файлу чи папки
             margin = len(current_dir.as_posix()) - len(old_margin) - 1
             margin_item = ' '
-            # old_margin = ' ' * len(old_margin)
             margin = old_margin + ' ' + margin * margin_item
             
             for_repl = current_dir.as_posix()
-            clean_path = item.as_posix().replace(f"{for_repl}/", margin)
-            print(clean_path)
+            clean_name = item.as_posix().replace(f"{for_repl}/", margin)
+            cororite_name(clean_name)
             
             if item.is_dir():   # Якщо це папка, пірнаємо на глибину
                 dfs_walk(item, index_slash, margin)
 
     dfs_walk(path_obj)
-
-
 
 
 def main():
@@ -56,12 +81,7 @@ def main():
     # print(f"{parent_folder_path = }")
 
     parse_folder_recursive(parent_folder_path)
-
-
     # print(path)
-
-
-
 
 if __name__ == '__main__':
     main()
