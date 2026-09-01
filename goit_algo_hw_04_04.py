@@ -1,22 +1,4 @@
 
-contacts = {} # {"Alex": "0931234567"}
-contact_file = "contacts.txt"
-
-
-welcome_banner = "CONTACTS BOT"
-
-
-commands = '''
-1) exit or close - to exit the application
-2) help - to print this menu
-3) add username phone - to add a new contact
-4) change username phone - to change the phone number your username
-5) all - to print all contacts
-6) phone username - to print phone number your username
-
-'''
-
-
 def parse_input(user_input):
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
@@ -48,7 +30,7 @@ def save_contacts(contact_file, contacts):
             file.write(f"{contact}: {phone}\n")
 
 
-def read_file():
+def read_file(contact_file):
     contacts = {}
     with open(contact_file, 'r') as file:
         for line in file:    #  mike: 000-000-00-00
@@ -56,24 +38,36 @@ def read_file():
             contacts[name] = phone
     return contacts
 
+
 def phone_username(args, contacts):
     name = args[0]
     return (name, contacts[name])
 
 
-def init():
-    global contacts
-    global contact_file
-    contacts = read_file()
-    print(welcome_banner)
+def init(contact_file, commands):
+
+    contacts = read_file(contact_file)
+    print("CONTACTS BOT")
     print("\nWelcome to the assistant bot!\n")
     print(commands)
     print()
+    return contacts
 
 
 def main():
-    # contacts = {}
-    # contact_file = "contacts.txt"
+    contacts = {}  # {"Alex": "0931234567"}
+    contact_file = "contacts.txt"
+
+    commands = '''
+    1) exit or close - to exit the application
+    2) help - to print this menu
+    3) add username phone - to add a new contact
+    4) change username phone - to change the phone number your username
+    5) all - to print all contacts
+    6) phone username - to print phone number your username
+
+    '''
+    contacts = init(contact_file, commands)
 
     while True:
         user_input = input("Enter your command (enter 'exit' or 'close' to stop): ").strip().lower()
@@ -103,12 +97,10 @@ def main():
         elif command == 'all':
             all(contacts)
 
-
         else:
             print("Invalid command.")
             continue
 
 
 if __name__ == "__main__":
-    init()
     main()
