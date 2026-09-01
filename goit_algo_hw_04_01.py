@@ -1,8 +1,6 @@
 def total_salary(file_to_open):
     
-    if len(file_to_open) < 1:
-        file_to_open = "employers_salary.txt"
-        # return 'It is not a file'
+    if len(file_to_open) < 1: return 'Incorrect input'
 
     employes_salary = 0.0
     counter = 0
@@ -23,14 +21,14 @@ def total_salary(file_to_open):
                 except ValueError:
                     print (f"{employe_salary[0]} have a incorrect data")
 
-    except FileNotFoundError:
-        return f"No such file or directory: {file_to_open}. Try again."
+    except FileNotFoundError as not_found:
+        return not_found
 
     try:
         return employes_salary, (employes_salary / counter)
 
-    except ZeroDivisionError as e:
-        return e
+    except ZeroDivisionError as zero_div:
+        return zero_div
 
 
 file_to_open = input('Please enter name file with informaiton: ')
