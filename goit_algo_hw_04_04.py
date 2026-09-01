@@ -47,8 +47,8 @@ def phone_username(args, contacts):
 def init(contact_file, commands):
 
     contacts = read_file(contact_file)
-    print("CONTACTS BOT")
-    print("\nWelcome to the assistant bot!\n")
+    print("CONTACTS BOT\n")
+    print("Welcome to the assistant bot!\n")
     print(commands)
     print()
     return contacts
