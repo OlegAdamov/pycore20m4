@@ -1,11 +1,13 @@
 
 def parse_input(user_input):
+
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args
 
 
 def add_contact(args, contacts):
+
     name, phone = args
     if name in contacts:
         return (f"This name is in your dictionary. Please write another name\n")
@@ -14,47 +16,60 @@ def add_contact(args, contacts):
 
 
 def all(contacts):
+
+    all_contacts = ""
+
     for key, value in contacts.items():
-        print(f"{key.capitalize()} has a phone number {value}")
+        all_contacts += (f"{key.capitalize()} has a phone number {value}\n")
+    return all_contacts
 
 
 def change_contact(args, contacts):
+
     name, phone = args
     contacts[name] = phone
     return "Contact changed."
 
 
 def save_contacts(contact_file, contacts):
+
     with open(contact_file, 'w') as file:
         for contact, phone in contacts.items():
             file.write(f"{contact}: {phone}\n")
 
 
 def read_file(contact_file):
+
     contacts = {}
-    with open(contact_file, 'r') as file:
-        for line in file:    #  mike: 000-000-00-00
-            name, phone = line.strip().split(': ')
-            contacts[name] = phone
+
+    try:
+        with open(contact_file, 'r') as file:
+
+            for line in file:    #  mike: 000-000-00-00
+                name, phone = line.strip().split(': ')
+                contacts[name] = phone
+
+    except FileNotFoundError:
+        return contacts
+    
     return contacts
+    
 
 
 def phone_username(args, contacts):
+
     name = args[0]
     return (name, contacts[name])
 
 
-def init(contact_file, commands):
+def init(contact_file):
 
     contacts = read_file(contact_file)
-    print("CONTACTS BOT\n")
-    print("Welcome to the assistant bot!\n")
-    print(commands)
-    print()
     return contacts
 
 
 def main():
+
     contacts = {}  # {"Alex": "0931234567"}
     contact_file = "contacts.txt"
 
@@ -65,11 +80,16 @@ def main():
     4) change username phone - to change the phone number your username
     5) all - to print all contacts
     6) phone username - to print phone number your username
-
     '''
-    contacts = init(contact_file, commands)
+    contacts = init(contact_file)
+
+    print("CONTACTS BOT\n")
+    print("Welcome to the assistant bot!")
+    print(commands)
+
 
     while True:
+
         user_input = input("Enter your command (enter 'exit' or 'close' to stop): ").strip().lower()
         command, *args = parse_input(user_input)
 
@@ -95,7 +115,7 @@ def main():
             print(f"Phone number {user.capitalize()} is: {phone}")
 
         elif command == 'all':
-            all(contacts)
+            print (all(contacts))
 
         else:
             print("Invalid command.")
