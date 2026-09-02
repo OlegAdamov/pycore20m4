@@ -1,11 +1,4 @@
 
-def parse_input(user_input):
-
-    cmd, *args = user_input.split()
-    cmd = cmd.strip().lower()
-    return cmd, *args
-
-
 def add_contact(args, contacts):
 
     name, phone = args
@@ -17,6 +10,7 @@ def add_contact(args, contacts):
 
 def all(contacts):
 
+    if not contacts: return f"Your contacts file is clean"
     all_contacts = ""
 
     for key, value in contacts.items():
@@ -31,11 +25,23 @@ def change_contact(args, contacts):
     return "Contact changed."
 
 
-def save_contacts(contact_file, contacts):
+def init(contact_file):
 
-    with open(contact_file, 'w') as file:
-        for contact, phone in contacts.items():
-            file.write(f"{contact}: {phone}\n")
+    contacts = read_file(contact_file)
+    return contacts
+
+
+def parse_input(user_input):
+
+    cmd, *args = user_input.split()
+    cmd = cmd.strip().lower()
+    return cmd, *args
+
+
+def phone_username(args, contacts):
+
+    name = args[0]
+    return (name, contacts[name])
 
 
 def read_file(contact_file):
@@ -46,6 +52,7 @@ def read_file(contact_file):
         with open(contact_file, 'r') as file:
 
             for line in file:    #  mike: 000-000-00-00
+                if line == '\n': continue
                 name, phone = line.strip().split(': ')
                 contacts[name] = phone
 
@@ -53,19 +60,13 @@ def read_file(contact_file):
         return contacts
     
     return contacts
-    
 
 
-def phone_username(args, contacts):
+def save_contacts(contact_file, contacts):
 
-    name = args[0]
-    return (name, contacts[name])
-
-
-def init(contact_file):
-
-    contacts = read_file(contact_file)
-    return contacts
+    with open(contact_file, 'w') as file:
+        for contact, phone in contacts.items():
+            file.write(f"{contact}: {phone}\n")
 
 
 def main():
